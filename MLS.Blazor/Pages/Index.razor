@@ -15,18 +15,18 @@ Welcome to your new app.
 
 private CodeRunner runner = new CodeRunner();
 
-protected override async Task OnAfterRenderAsync()
+protected override async Task OnAfterRenderAsync(bool firstRender)
 {
-    await base.OnAfterRenderAsync();
+    await base.OnAfterRenderAsync(firstRender);
 
     await jsRuntime.InvokeAsync<object>(
             "BlazorInterop.install",
-            DotNetObjectRef.Create(this));
+            DotNetObjectReference.Create(this));
 
     await PostMessage(JObject.FromObject(new { ready = true }).ToString());
 }
 
-public Task<string> PostMessage(string message)
+public ValueTask<string> PostMessage(string message)
 {
     // Implemented in interop.js
     return jsRuntime.InvokeAsync<string>(
